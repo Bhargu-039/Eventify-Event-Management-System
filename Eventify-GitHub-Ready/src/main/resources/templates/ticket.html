@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Digital Ticket</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins;
+}
+
+body{
+background:linear-gradient(135deg,#0f0f1a,#1e1b4b);
+color:white;
+padding:30px;
+}
+
+/* HEADER */
+
+.header{
+text-align:center;
+margin-bottom:30px;
+animation:fadeIn 1s ease;
+}
+
+.header h1{
+color:#22c55e;
+}
+
+.icon{
+font-size:50px;
+color:#22c55e;
+animation:pop 0.6s ease;
+}
+
+/* TICKET */
+
+.ticket{
+display:flex;
+flex-wrap:wrap;
+max-width:900px;
+margin:auto;
+border-radius:20px;
+overflow:hidden;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(15px);
+box-shadow:0 10px 40px rgba(0,0,0,0.6);
+animation:slideUp 0.8s ease;
+}
+
+/* LEFT */
+
+.left{
+flex:1;
+min-width:300px;
+background:url('https://images.unsplash.com/photo-1505236858219-8359eb29e329') center/cover;
+padding:20px;
+display:flex;
+flex-direction:column;
+justify-content:flex-end;
+}
+
+.left h2{
+font-size:24px;
+font-weight:600;
+}
+
+.tag{
+background:#ff2ea6;
+display:inline-block;
+padding:5px 10px;
+border-radius:20px;
+margin-top:10px;
+}
+
+/* RIGHT */
+
+.right{
+flex:1;
+min-width:300px;
+padding:25px;
+}
+
+.detail{
+margin:10px 0;
+}
+
+.ticket-id{
+background:#000;
+padding:10px;
+border-radius:10px;
+color:#22c55e;
+margin-top:10px;
+font-weight:bold;
+}
+
+/* QR */
+
+.qr{
+margin-top:20px;
+text-align:center;
+}
+
+.qr canvas{
+background:white;
+padding:10px;
+border-radius:10px;
+animation:glow 2s infinite alternate;
+}
+
+/* BUTTONS */
+
+.actions{
+margin-top:30px;
+text-align:center;
+}
+
+.btn{
+display:inline-block;
+margin:10px;
+padding:12px 20px;
+border-radius:30px;
+background:linear-gradient(90deg,#6d28d9,#ff2ea6);
+color:white;
+text-decoration:none;
+transition:0.3s;
+}
+
+.btn:hover{
+transform:scale(1.05);
+}
+
+/* STATUS */
+
+.status{
+background:#22c55e;
+padding:5px 15px;
+border-radius:20px;
+display:inline-block;
+margin-bottom:10px;
+}
+
+/* ANIMATIONS */
+
+@keyframes fadeIn{
+from{opacity:0;}
+to{opacity:1;}
+}
+
+@keyframes slideUp{
+from{transform:translateY(40px);opacity:0;}
+to{transform:translateY(0);opacity:1;}
+}
+
+@keyframes pop{
+0%{transform:scale(0);}
+100%{transform:scale(1);}
+}
+
+@keyframes glow{
+from{box-shadow:0 0 5px #22c55e;}
+to{box-shadow:0 0 20px #22c55e;}
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<div class="header">
+<div class="icon">✔</div>
+<h1>Booking Confirmed!</h1>
+<p>Your ticket has been successfully generated 🎉</p>
+</div>
+
+<!-- TICKET -->
+
+<div class="ticket">
+
+<!-- LEFT -->
+
+<div class="left">
+<h2 th:text="${reg.eventName}">Event Name</h2>
+<span class="tag">Premium Event</span>
+</div>
+
+<!-- RIGHT -->
+
+<div class="right">
+
+<span class="status">CONFIRMED</span>
+
+<div class="detail"><strong>Name:</strong> <span th:text="${reg.name}"></span></div>
+<div class="detail"><strong>Email:</strong> <span th:text="${reg.email}"></span></div>
+<div class="detail"><strong>Phone:</strong> <span th:text="${reg.phone}"></span></div>
+
+<div class="detail"><strong>Tickets:</strong> <span th:text="${reg.tickets}"></span></div>
+
+<div class="ticket-id">
+Ticket ID: <span th:text="${reg.ticketId}"></span>
+</div>
+
+<!-- QR CODE -->
+
+<div class="qr">
+<div id="qrcode"></div>
+<p>Scan at Entry</p>
+</div>
+
+</div>
+
+</div>
+
+<!-- ACTIONS -->
+
+<div class="actions">
+<a href="/events" class="btn">View Events</a>
+<a href="/" class="btn">Go Home</a>
+<button onclick="downloadPDF()" class="btn">Download Ticket</button>
+</div>
+
+<!-- SCRIPT -->
+
+<script>
+
+// QR CODE DATA
+let qrData = `
+TicketID: [[${reg.ticketId}]]
+Name: [[${reg.name}]]
+Event: [[${reg.eventName}]]
+`;
+
+new QRCode(document.getElementById("qrcode"), {
+    text: qrData,
+    width: 120,
+    height: 120
+});
+
+// DOWNLOAD (simple print as PDF)
+
+function downloadPDF(){
+    window.print();
+}
+
+</script>
+
+</body>
+</html>

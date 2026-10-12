@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Create Event</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins;
+}
+
+body{
+background:linear-gradient(135deg,#0f0f1a,#1e1b4b);
+color:white;
+}
+
+/* NAVBAR */
+
+.navbar{
+position:sticky;
+top:0;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 8%;
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(12px);
+}
+
+.navbar h2{ color:#ff2ea6; }
+
+.navbar a{
+color:white;
+margin-left:20px;
+text-decoration:none;
+}
+
+.navbar a:hover{
+color:#ff2ea6;
+}
+
+/* HEADER */
+
+.header{
+padding:40px 8%;
+}
+
+/* MAIN */
+
+.container{
+display:flex;
+gap:30px;
+padding:20px 8%;
+flex-wrap:wrap;
+}
+
+/* FORM */
+
+.form-box{
+flex:2;
+background:rgba(255,255,255,0.05);
+padding:30px;
+border-radius:15px;
+backdrop-filter:blur(10px);
+}
+
+.section{
+margin-bottom:25px;
+}
+
+.section h3{
+margin-bottom:10px;
+color:#ff2ea6;
+}
+
+input, textarea, select{
+width:100%;
+padding:10px;
+margin-top:10px;
+border:none;
+border-radius:8px;
+outline:none;
+}
+
+/* BUTTONS */
+
+.btn{
+margin-top:15px;
+padding:12px;
+border:none;
+border-radius:30px;
+cursor:pointer;
+}
+
+.publish{
+background:linear-gradient(90deg,#6d28d9,#ff2ea6);
+color:white;
+}
+
+/* PREVIEW */
+
+.preview{
+flex:1;
+background:rgba(255,255,255,0.05);
+padding:20px;
+border-radius:15px;
+}
+
+.preview img{
+width:100%;
+height:180px;
+object-fit:cover;
+border-radius:10px;
+}
+
+.price{
+color:#ff2ea6;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- ✅ FIXED NAVBAR (NO DOUBLE NAVBAR) -->
+
+<div class="navbar">
+<h2>Eventify</h2>
+
+<div>
+    <a href="/">Home</a>
+    <a href="/events">Events</a>
+    <a href="/create">Create Event</a>
+    <a href="/attendees">Attendees</a>
+
+    <!-- NOT LOGGED IN -->
+    <span th:if="${loggedUser == null}">
+        <a href="/signin">Sign In</a>
+        <a href="/signup">Sign Up</a>
+    </span>
+
+    <!-- LOGGED IN -->
+    <span th:if="${loggedUser != null}">
+        <span style="color:#ff2ea6;">
+            👤 <span th:text="${loggedUser.name}"></span>
+        </span>
+        <a href="/logout">Logout</a>
+    </span>
+</div>
+</div>
+
+<!-- HEADER -->
+
+<div class="header">
+<h1>Create New Event</h1>
+<p>Design and publish your event effortlessly</p>
+</div>
+
+<!-- MAIN -->
+
+<div class="container">
+
+<!-- FORM -->
+
+<div class="form-box">
+
+<form action="/saveEvent" method="post" enctype="multipart/form-data">
+
+<div class="section">
+<h3>Basic Details</h3>
+
+<input type="text" name="name" placeholder="Event Name" id="name" required>
+
+<select name="ticketType" id="type">
+<option value="Free">Free</option>
+<option value="Paid">Paid</option>
+</select>
+
+<textarea name="description" placeholder="Event Description"></textarea>
+
+</div>
+
+<div class="section">
+<h3>Event Banner</h3>
+<input type="file" name="image" id="image" accept="image/*">
+</div>
+
+<div class="section">
+<h3>Date & Time</h3>
+<input type="datetime-local" name="date" id="date" required>
+</div>
+
+<div class="section">
+<h3>Location</h3>
+<input type="text" name="location" placeholder="Location" required>
+</div>
+
+<div class="section">
+<h3>Tickets</h3>
+
+<input type="number" name="price" placeholder="Price">
+
+<select name="status">
+<option value="Upcoming">Upcoming</option>
+</select>
+
+</div>
+
+<button type="submit" class="btn publish">Publish Event</button>
+
+</form>
+
+</div>
+
+<!-- PREVIEW -->
+
+<div class="preview">
+
+<h3>Live Preview</h3>
+
+<img id="previewImg" src="https://images.unsplash.com/photo-1505236858219-8359eb29e329">
+
+<h3 id="previewName">Event Name</h3>
+<p id="previewDate">Date</p>
+<p class="price" id="previewPrice">Free</p>
+
+</div>
+
+</div>
+
+<script>
+
+document.getElementById("name").addEventListener("input", function(){
+document.getElementById("previewName").innerText = this.value;
+});
+
+document.getElementById("date").addEventListener("input", function(){
+document.getElementById("previewDate").innerText = this.value;
+});
+
+document.getElementById("type").addEventListener("change", function(){
+document.getElementById("previewPrice").innerText = this.value;
+});
+
+document.getElementById("image").addEventListener("change", function(e){
+const file = e.target.files[0];
+if(file){
+const reader = new FileReader();
+reader.onload = function(){
+document.getElementById("previewImg").src = reader.result;
+}
+reader.readAsDataURL(file);
+}
+});
+
+</script>
+
+</body>
+</html>

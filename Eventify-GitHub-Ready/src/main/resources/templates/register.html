@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Register Event</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins;
+}
+
+body{
+background:linear-gradient(135deg,#0f0f1a,#1e1b4b);
+color:white;
+}
+
+/* ✅ CLEAN NAVBAR */
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 8%;
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(12px);
+}
+
+.navbar h2{
+color:#ff2ea6;
+}
+
+.navbar a{
+color:white;
+margin-left:20px;
+text-decoration:none;
+transition:0.3s;
+}
+
+.navbar a:hover{
+color:#ff2ea6;
+}
+
+/* HEADER */
+.header{
+height:200px;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#1e1b4b,#0f0f1a);
+text-align:center;
+}
+
+/* MAIN */
+.container{
+display:flex;
+gap:30px;
+padding:40px 8%;
+flex-wrap:wrap;
+}
+
+/* EVENT CARD */
+.event-card{
+flex:1;
+min-width:300px;
+background:rgba(255,255,255,0.05);
+border-radius:15px;
+overflow:hidden;
+backdrop-filter:blur(10px);
+}
+
+.event-card img{
+width:100%;
+height:220px;
+object-fit:cover;
+}
+
+.event-card div{
+padding:20px;
+}
+
+.price{
+color:#ff2ea6;
+}
+
+/* FORM */
+.form-box{
+flex:1;
+min-width:300px;
+background:rgba(255,255,255,0.05);
+padding:30px;
+border-radius:15px;
+backdrop-filter:blur(10px);
+}
+
+/* INPUT */
+.input-box{
+margin:20px 0;
+}
+
+.input-box input,
+.input-box textarea{
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+outline:none;
+background:#1e1b4b;
+color:white;
+}
+
+/* EVENT NAME */
+.event-name{
+padding:12px;
+border-radius:10px;
+background:#1e1b4b;
+margin-top:10px;
+}
+
+/* TICKETS */
+.ticket-box{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:#1e1b4b;
+padding:12px;
+border-radius:10px;
+margin-top:10px;
+}
+
+.ticket-box button{
+background:#ff2ea6;
+border:none;
+color:white;
+padding:5px 12px;
+border-radius:5px;
+cursor:pointer;
+font-size:18px;
+}
+
+/* BUTTON */
+.btn{
+margin-top:20px;
+background:linear-gradient(90deg,#6d28d9,#ff2ea6);
+padding:12px;
+border:none;
+border-radius:30px;
+color:white;
+cursor:pointer;
+width:100%;
+}
+
+/* PAYMENT */
+.payment{
+margin-top:20px;
+}
+
+.pay-option{
+background:#1e1b4b;
+padding:10px;
+margin-top:10px;
+border-radius:10px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.pay-option:hover{
+background:#ff2ea6;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- ✅ SINGLE NAVBAR -->
+<div class="navbar">
+    <h2>Eventify</h2>
+
+    <div>
+        <a href="/">Home</a>
+        <a href="/events">Events</a>
+        <a href="/create">Create Event</a>
+        <a href="/attendees">Attendees</a>
+
+        <!-- NOT LOGGED IN -->
+        <span th:if="${loggedUser == null}">
+            <a href="/signin">Sign In</a>
+            <a href="/signup">Sign Up</a>
+        </span>
+
+        <!-- LOGGED IN -->
+        <span th:if="${loggedUser != null}">
+            <span style="color:#ff2ea6;">
+                👤 <span th:text="${loggedUser.name}"></span>
+            </span>
+            <a href="/logout">Logout</a>
+        </span>
+    </div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+<h1>Register for Event</h1>
+<p>Secure your seat in just a few clicks</p>
+</div>
+
+<!-- MAIN -->
+<div class="container">
+
+<!-- EVENT DETAILS -->
+<div class="event-card">
+
+<img th:src="${event != null && event.imageUrl != null ? event.imageUrl : 'https://images.unsplash.com/photo-1505236858219-8359eb29e329'}">
+
+<div>
+<h3 th:text="${event != null ? event.name : 'Event'}"></h3>
+
+<p th:text="${event != null ? event.date + ' • ' + event.location : ''}"></p>
+
+<p class="price"
+   th:text="${event != null && event.price == 0 ? 'Free' : '₹' + event.price}">
+</p>
+</div>
+
+</div>
+
+<!-- FORM -->
+<div class="form-box">
+
+<form action="/saveRegistration" method="post">
+
+<div class="input-box">
+<input type="text" name="name" placeholder="Full Name" required>
+</div>
+
+<div class="input-box">
+<input type="email" name="email" placeholder="Email" required>
+</div>
+
+<div class="input-box">
+<input type="text" name="phone" placeholder="Phone" required>
+</div>
+
+<label>Event Name</label>
+<div class="event-name"
+     th:text="${event != null ? event.name : ''}">
+</div>
+
+<input type="hidden" name="eventName"
+       th:value="${event != null ? event.name : ''}">
+
+<label style="margin-top:15px;display:block;">Tickets</label>
+
+<div class="ticket-box">
+<button type="button" onclick="decrease()">-</button>
+<span id="count">1</span>
+<button type="button" onclick="increase()">+</button>
+</div>
+
+<input type="hidden" name="tickets" id="tickets" value="1">
+
+<div class="input-box">
+<textarea name="request" placeholder="Special Requests"></textarea>
+</div>
+
+<div class="payment">
+<h3>Payment</h3>
+<div class="pay-option">UPI</div>
+<div class="pay-option">Card</div>
+<div class="pay-option">Net Banking</div>
+</div>
+
+<button type="submit" class="btn">Confirm Registration</button>
+
+</form>
+
+</div>
+
+</div>
+
+<script>
+
+let count = 1;
+
+function increase(){
+count++;
+document.getElementById("count").innerText = count;
+document.getElementById("tickets").value = count;
+}
+
+function decrease(){
+if(count > 1){
+count--;
+document.getElementById("count").innerText = count;
+document.getElementById("tickets").value = count;
+}
+}
+
+</script>
+
+</body>
+</html>

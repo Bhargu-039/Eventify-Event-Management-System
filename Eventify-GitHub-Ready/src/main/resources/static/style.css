@@ -1,0 +1,269 @@
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:#f5f5f5;
+}
+
+/* Navbar */
+
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 40px;
+background:black;
+color:white;
+}
+
+.navbar a{
+color:white;
+text-decoration:none;
+margin:0 15px;
+font-weight:500;
+}
+
+.navbar a:hover{
+color:#a855f7;
+}
+
+/* Hero Section */
+
+.hero{
+height:90vh;
+background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.7)),
+url("https://images.unsplash.com/photo-1505236858219-8359eb29e329");
+background-size:cover;
+background-position:center;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+color:white;
+}
+
+.hero h1{
+font-size:60px;
+margin-bottom:20px;
+}
+
+.hero p{
+font-size:20px;
+margin-bottom:30px;
+}
+
+.btn{
+background:#7b2cbf;
+padding:12px 30px;
+border:none;
+border-radius:30px;
+color:white;
+font-size:16px;
+cursor:pointer;
+text-decoration:none;
+}
+
+.btn:hover{
+background:#5a189a;
+}
+
+/* Section */
+
+.section{
+padding:60px 10%;
+text-align:center;
+}
+
+.cards{
+display:flex;
+gap:30px;
+margin-top:40px;
+flex-wrap:wrap;
+justify-content:center;
+}
+
+.card{
+background:white;
+padding:30px;
+width:250px;
+border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.2);
+}
+
+.card h3{
+color:#7b2cbf;
+}
+
+/* Form */
+
+.form-container{
+width:40%;
+margin:auto;
+background:white;
+padding:40px;
+border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.2);
+}
+
+input,select{
+width:100%;
+padding:10px;
+margin:10px 0;
+}
+
+button{
+background:#7b2cbf;
+color:white;
+padding:10px 20px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+/* Table */
+
+table{
+width:80%;
+margin:auto;
+border-collapse:collapse;
+}
+
+th{
+background:#7b2cbf;
+color:white;
+padding:10px;
+}
+
+td{
+padding:10px;
+border:1px solid #ddd;
+}
+/* =========================================================
+   EVENTIFY PREMIUM LIGHT UI OVERRIDES
+   Visual-only layer: preserves existing HTML, routes,
+   Thymeleaf expressions, form fields, and button actions.
+   ========================================================= */
+:root {
+  color-scheme: light;
+  --eventify-ink: #211a35;
+  --eventify-muted: #716b82;
+  --eventify-purple: #6d42d8;
+  --eventify-purple-dark: #5630bd;
+  --eventify-purple-soft: #f0eaff;
+  --eventify-border: #e8e2f4;
+  --eventify-shadow: 0 18px 50px rgba(67, 44, 112, .10);
+}
+html { scroll-behavior: smooth; }
+body {
+  color: var(--eventify-ink) !important;
+  background: linear-gradient(135deg, #fbfaff 0%, #f5f1ff 52%, #fff 100%) !important;
+  font-family: 'Poppins', 'Inter', 'Segoe UI', sans-serif !important;
+}
+h1, h2, h3, h4, h5, p, label, small, td, th { text-shadow: none; }
+h1, h2, h3, h4 { letter-spacing: -.025em; }
+a { transition: color .2s ease, background .2s ease, transform .2s ease; }
+
+/* Consistent, light glass navbar across existing pages */
+.navbar {
+  position: sticky; top: 0; z-index: 50; min-height: 72px;
+  display: flex; align-items: center; justify-content: space-between; gap: 18px;
+  padding: 14px clamp(18px, 5vw, 76px) !important;
+  color: var(--eventify-ink) !important;
+  background: rgba(255,255,255,.90) !important;
+  border-bottom: 1px solid rgba(224,216,241,.9);
+  box-shadow: 0 6px 24px rgba(52,35,92,.05);
+  backdrop-filter: blur(18px);
+}
+.navbar h2, .navbar .logo, .logo, .navbar strong { color: var(--eventify-purple) !important; }
+.navbar a { color: #514763 !important; margin-left: 12px; font-weight: 500; text-decoration: none; border-radius: 10px; }
+.navbar a:hover { color: var(--eventify-purple-dark) !important; background: #f3edff; }
+.navbar .btn, .navbar button { color: #fff !important; }
+.hero { position: relative; background-color: #f3edff; }
+.hero h1 { line-height: 1.08; }
+.section { color: var(--eventify-ink); }
+.header { color: var(--eventify-ink) !important; }
+.header p, .muted, .subtitle { color: var(--eventify-muted); }
+
+/* Cards, panels, and form surfaces */
+.card, .event-card, .form-box, .form-container, .ticket,
+.container .card, .container .form-box, .right .card {
+  color: var(--eventify-ink) !important;
+  background: rgba(255,255,255,.96) !important;
+  border: 1px solid var(--eventify-border) !important;
+  box-shadow: var(--eventify-shadow) !important;
+  backdrop-filter: blur(16px);
+}
+.card h2, .card h3, .event-card h2, .event-card h3 { color: var(--eventify-purple) !important; }
+.card p, .event-card p, .card label { color: var(--eventify-muted); }
+.events { align-items: stretch; }
+.events .card, .cards .card { border-radius: 20px !important; transition: transform .22s ease, box-shadow .22s ease; }
+.events .card:hover, .cards .card:hover { transform: translateY(-4px); box-shadow: 0 24px 56px rgba(67,44,112,.15) !important; }
+
+/* Existing controls retain their original labels and actions */
+button, .btn, a.btn, input[type="submit"], input[type="button"] {
+  background: linear-gradient(135deg, #7955e8, #6238cc) !important;
+  color: #fff !important; border: 1px solid transparent !important;
+  border-radius: 12px !important; padding: 11px 19px; font-weight: 600;
+  box-shadow: 0 7px 18px rgba(101,61,205,.18);
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+}
+button:hover, .btn:hover, a.btn:hover, input[type="submit"]:hover, input[type="button"]:hover {
+  filter: brightness(1.04); transform: translateY(-1px); box-shadow: 0 10px 22px rgba(101,61,205,.25);
+}
+.btn-green, .check { background: linear-gradient(135deg,#239b70,#16845e) !important; }
+.btn-red, .delete { background: linear-gradient(135deg,#e35d78,#c93658) !important; }
+input, select, textarea {
+  max-width: 100%; color: var(--eventify-ink); background: #fff !important;
+  border: 1px solid #ded6ec !important; border-radius: 11px !important;
+  padding: 12px 14px !important; outline: none; box-shadow: 0 2px 5px rgba(43,28,76,.025);
+}
+input:focus, select:focus, textarea:focus { border-color: #9a7af0 !important; box-shadow: 0 0 0 4px rgba(121,85,232,.12) !important; }
+input::placeholder, textarea::placeholder { color: #9b94aa; }
+label { color: #4e465e; font-weight: 500; }
+.form-container, .form-box { border-radius: 22px !important; }
+.container { gap: 24px; }
+
+/* Tables and attendee/check-in management */
+table {
+  width: min(100% - 32px, 1200px) !important; border-collapse: separate !important;
+  border-spacing: 0; overflow: hidden; border-radius: 15px; background: #fff; box-shadow: var(--eventify-shadow);
+}
+th { background: #eee8ff !important; color: #49318b !important; padding: 15px 14px !important; text-align: left; border: 0 !important; }
+td { color: #514a60; padding: 14px !important; border-bottom: 1px solid #eee9f5 !important; border-left: 0 !important; border-right: 0 !important; }
+tr:last-child td { border-bottom: 0 !important; }
+tbody tr:hover { background: #faf8ff; }
+
+/* Sign-in and sign-up split layouts remain split, now with light cards */
+body:has(.input-box):has(.left):has(.right) {
+  min-height: 100vh; height: auto !important;
+  background: linear-gradient(135deg,#fbfaff,#f0eaff 55%,#fff) !important;
+}
+body:has(.input-box):has(.left):has(.right) .left { color: #fff !important; background-color: #5e3ab8; }
+body:has(.input-box):has(.left):has(.right) .right { padding: 32px 20px; }
+body:has(.input-box):has(.left):has(.right) .card {
+  color: var(--eventify-ink) !important; background: rgba(255,255,255,.97) !important;
+  border: 1px solid var(--eventify-border); box-shadow: 0 24px 70px rgba(48,31,90,.13) !important;
+}
+body:has(.input-box):has(.left):has(.right) .input-box input { color: var(--eventify-ink) !important; border-bottom-color: #d8cfee !important; }
+body:has(.input-box):has(.left):has(.right) .input-box label { color: #716781; }
+body:has(.input-box):has(.left):has(.right) .error { color: #c72e50 !important; }
+.ticket { border-radius: 24px !important; }
+.ticket .left { color: #fff !important; }
+.ticket .right, .ticket .details { color: var(--eventify-ink); }
+.status, .tag { border-radius: 999px; }
+
+/* Responsive alignment */
+@media (max-width: 760px) {
+  .navbar { position: relative; flex-wrap: wrap; justify-content: center; padding: 14px 18px !important; }
+  .navbar a { margin: 4px 5px; }
+  .hero h1 { font-size: clamp(34px, 8vw, 52px) !important; }
+  .section { padding: 42px 20px !important; }
+  .events, .cards { padding-left: 18px !important; padding-right: 18px !important; }
+  .form-container { width: calc(100% - 32px) !important; padding: 24px !important; }
+  .container { padding: 22px 18px !important; }
+  table { display: block; overflow-x: auto; white-space: nowrap; }
+  body:has(.input-box):has(.left):has(.right) { display: block !important; }
+  body:has(.input-box):has(.left):has(.right) .left { min-height: 220px; padding: 30px 24px !important; }
+  body:has(.input-box):has(.left):has(.right) .left h1 { font-size: 30px !important; }
+  body:has(.input-box):has(.left):has(.right) .right { min-height: 55vh; padding: 22px 16px; }
+  body:has(.input-box):has(.left):has(.right) .card { width: min(100%, 420px) !important; }
+}

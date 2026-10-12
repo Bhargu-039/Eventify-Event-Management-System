@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Attendee Management</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* RESET */
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins;
+}
+
+body{
+background:linear-gradient(135deg,#0f0f1a,#1e1b4b);
+color:white;
+}
+
+/* NAVBAR */
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 8%;
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(12px);
+}
+
+.navbar h2{
+color:#ff2ea6;
+}
+
+.navbar a{
+color:white;
+margin-left:20px;
+text-decoration:none;
+}
+
+.navbar a:hover{
+color:#ff2ea6;
+}
+
+/* HEADER */
+.header{
+padding:40px 8%;
+}
+
+/* DASH CARDS */
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+padding:0 8%;
+}
+
+.card{
+background:rgba(255,255,255,0.05);
+padding:20px;
+border-radius:15px;
+text-align:center;
+backdrop-filter:blur(12px);
+border:1px solid rgba(255,255,255,0.08);
+}
+
+.card h2{
+color:#ff2ea6;
+}
+
+/* TABLE */
+.table-container{
+padding:40px 8%;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+background:rgba(255,255,255,0.03);
+backdrop-filter:blur(10px);
+border-radius:10px;
+overflow:hidden;
+}
+
+th,td{
+padding:15px;
+text-align:left;
+}
+
+th{
+background:#1e1b4b;
+}
+
+tr:hover{
+background:rgba(255,255,255,0.05);
+}
+
+/* STATUS */
+.status{
+padding:5px 10px;
+border-radius:20px;
+font-size:12px;
+}
+
+.checked{
+background:#22c55e;
+}
+
+.pending{
+background:#f59e0b;
+}
+
+/* BUTTONS */
+.btn{
+padding:6px 12px;
+border-radius:15px;
+border:none;
+cursor:pointer;
+margin-right:5px;
+font-size:12px;
+}
+
+.check{
+background:#22c55e;
+color:white;
+}
+
+.delete{
+background:#ef4444;
+color:white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- ✅ FIXED NAVBAR (NO NESTING) -->
+<div class="navbar">
+    <h2>🎉 Eventify</h2>
+
+    <div>
+        <a href="/">Home</a>
+        <a href="/events">Events</a>
+        <a href="/create">Create Event</a>
+        <a href="/attendees">Attendees</a>
+
+        <!-- NOT LOGGED IN -->
+        <span th:if="${loggedUser == null}">
+            <a href="/signin">Sign In</a>
+            <a href="/signup">Sign Up</a>
+        </span>
+
+        <!-- LOGGED IN -->
+        <span th:if="${loggedUser != null}">
+            <span style="color:#ff2ea6;">
+                👤 <span th:text="${loggedUser.name}"></span>
+            </span>
+            <a href="/logout">Logout</a>
+        </span>
+    </div>
+</div>
+
+<!-- HEADER -->
+<div class="header">
+<h1>Attendee Management</h1>
+<p>Monitor registrations and manage check-ins</p>
+</div>
+
+<!-- DASHBOARD -->
+<div class="cards">
+
+<div class="card">
+<h2 th:text="${list.size()}">0</h2>
+<p>Total Attendees</p>
+</div>
+
+<div class="card">
+<h2 th:text="${totalTickets}">0</h2>
+<p>Tickets Booked</p>
+</div>
+
+<div class="card">
+<h2 th:text="${checkedIn}">0</h2>
+<p>Checked-in</p>
+</div>
+
+<div class="card">
+<h2 th:text="${pending}">0</h2>
+<p>Pending</p>
+</div>
+
+</div>
+
+<!-- TABLE -->
+<div class="table-container">
+
+<table>
+
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Phone</th>
+<th>Tickets</th>
+<th>Status</th>
+<th>Actions</th>
+</tr>
+
+<tr th:each="reg : ${list}">
+
+<td th:text="${reg.name}"></td>
+<td th:text="${reg.email}"></td>
+<td th:text="${reg.phone}"></td>
+<td th:text="${reg.tickets}"></td>
+
+<td>
+<span th:class="'status ' + (${reg.status} == 'Checked-In' ? 'checked' : 'pending')"
+      th:text="${reg.status}">
+</span>
+</td>
+
+<td>
+
+<!-- CHECK-IN -->
+<form th:action="@{'/checkin/' + ${reg.id}}" method="post" style="display:inline;">
+<button class="btn check" type="submit">Check-in</button>
+</form>
+
+<!-- DELETE -->
+<form th:action="@{'/deleteRegistration/' + ${reg.id}}" method="post"
+      style="display:inline;"
+      onsubmit="return confirm('Are you sure?')">
+<button class="btn delete" type="submit">Delete</button>
+</form>
+
+</td>
+
+</tr>
+
+</table>
+
+</div>
+
+</body>
+</html>

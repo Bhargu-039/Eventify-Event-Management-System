@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Event Check-In</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins;
+}
+
+body{
+background:linear-gradient(135deg,#0f0f1a,#1e1b4b);
+color:white;
+}
+
+/* NAVBAR */
+
+.navbar{
+position:sticky;
+top:0;
+display:flex;
+justify-content:space-between;
+padding:15px 8%;
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(12px);
+}
+
+.navbar h2{
+color:#ff2ea6;
+}
+
+.navbar a{
+color:white;
+margin-left:20px;
+text-decoration:none;
+}
+
+/* HEADER */
+
+.header{
+padding:40px 8%;
+}
+
+.header h1{
+font-size:32px;
+}
+
+/* CONTAINER */
+
+.container{
+padding:20px 8%;
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:30px;
+}
+
+/* CARD */
+
+.card{
+background:rgba(255,255,255,0.05);
+padding:20px;
+border-radius:15px;
+backdrop-filter:blur(10px);
+box-shadow:0 10px 30px rgba(0,0,0,0.5);
+}
+
+/* SCANNER */
+
+#reader{
+width:100%;
+border-radius:10px;
+overflow:hidden;
+}
+
+/* BUTTON */
+
+.btn{
+margin-top:10px;
+padding:10px 20px;
+border:none;
+border-radius:25px;
+background:linear-gradient(90deg,#6d28d9,#ff2ea6);
+color:white;
+cursor:pointer;
+}
+
+/* INPUT */
+
+input{
+width:100%;
+padding:10px;
+margin-top:10px;
+border:none;
+border-radius:10px;
+}
+
+/* STATUS */
+
+.success{
+background:#22c55e;
+padding:10px;
+border-radius:10px;
+margin-top:10px;
+}
+
+.error{
+background:#ef4444;
+padding:10px;
+border-radius:10px;
+margin-top:10px;
+}
+
+.warning{
+background:#f59e0b;
+padding:10px;
+border-radius:10px;
+margin-top:10px;
+}
+
+/* ACTIVITY */
+
+.activity{
+max-height:300px;
+overflow:auto;
+}
+
+.activity p{
+font-size:14px;
+margin-bottom:5px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px){
+.container{
+grid-template-columns:1fr;
+}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+<h2>Eventify</h2>
+
+<div class="navbar">
+    <h2>🎉 Eventify</h2>
+
+    <div>
+        <a href="/">Home</a>
+        <a href="/events">Events</a>
+        <a href="/create">Create Event</a>
+        <a href="/attendees">Attendees</a>
+
+        <!-- ✅ IF USER NOT LOGGED IN -->
+        <span th:if="${loggedUser == null}">
+            <a href="/signin">Sign In</a>
+            <a href="/signup">Sign Up</a>
+        </span>
+
+        <!-- ✅ IF USER LOGGED IN -->
+        <span th:if="${loggedUser != null}">
+            <span style="color:#ff2ea6;">
+                👤 <span th:text="${loggedUser.name}"></span>
+            </span>
+            <a href="/logout">Logout</a>
+        </span>
+    </div>
+</div>
+</div>
+
+<!-- HEADER -->
+
+<div class="header">
+<h1>Event Check-In</h1>
+<p>Scan tickets and verify attendees quickly</p>
+</div>
+
+<!-- MAIN -->
+
+<div class="container">
+
+<!-- LEFT SIDE -->
+
+<div>
+
+<!-- SCANNER -->
+
+<div class="card">
+<h3>QR Scanner</h3>
+
+<div id="reader"></div>
+
+<button class="btn" onclick="startScanner()">Start Scanner</button>
+<button class="btn" onclick="stopScanner()">Stop Scanner</button>
+
+</div>
+
+<!-- MANUAL INPUT -->
+
+<div class="card" style="margin-top:20px;">
+<h3>Manual Check-In</h3>
+
+<input type="text" id="ticketInput" placeholder="Enter Ticket ID / Email">
+
+<button class="btn" onclick="manualCheck()">Verify & Check-In</button>
+
+</div>
+
+<!-- RESULT -->
+
+<div id="resultBox" class="card" style="margin-top:20px; display:none;"></div>
+
+</div>
+
+<!-- RIGHT SIDE -->
+
+<div>
+
+<!-- SUMMARY -->
+
+<div class="card">
+<h3>Summary</h3>
+
+<p>Total: <span th:text="${total}">0</span></p>
+<p>Checked-In: <span th:text="${checkedIn}">0</span></p>
+<p>Pending: <span th:text="${pending}">0</span></p>
+
+</div>
+
+<!-- ACTIVITY -->
+
+<div class="card" style="margin-top:20px;">
+<h3>Recent Activity</h3>
+
+<div class="activity" id="activityLog">
+<p>No activity yet</p>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let scanner;
+
+function startScanner(){
+scanner = new Html5Qrcode("reader");
+
+scanner.start(
+{ facingMode: "environment" },
+{ fps: 10, qrbox: 250 },
+(qrCodeMessage) => {
+verifyTicket(qrCodeMessage);
+}
+);
+}
+
+function stopScanner(){
+if(scanner){
+scanner.stop();
+}
+}
+
+function manualCheck(){
+let value = document.getElementById("ticketInput").value;
+verifyTicket(value);
+}
+
+function verifyTicket(data){
+
+// 🔥 CALL BACKEND
+fetch("/api/verify/" + data)
+.then(res => res.json())
+.then(res => {
+
+let box = document.getElementById("resultBox");
+box.style.display = "block";
+
+if(res.status === "invalid"){
+box.innerHTML = `<div class="error">❌ Invalid Ticket</div>`;
+return;
+}
+
+if(res.status === "checked"){
+box.innerHTML = `<div class="warning">⚠ Already Checked-In</div>`;
+return;
+}
+
+box.innerHTML = `
+<h3>${res.name}</h3>
+<p>Event: ${res.event}</p>
+<p>Ticket: ${res.ticketId}</p>
+
+<button class="btn" onclick="markCheckin('${res.ticketId}')">
+Mark as Checked-In
+</button>
+`;
+
+});
+}
+
+function markCheckin(id){
+
+fetch("/checkin/" + id, { method:"POST" })
+.then(() => {
+
+let box = document.getElementById("resultBox");
+
+box.innerHTML = `<div class="success">✅ Check-In Successful</div>`;
+
+let log = document.getElementById("activityLog");
+log.innerHTML += `<p>✔ ${id} checked-in</p>`;
+
+});
+}
+
+</script>
+
+</body>
+</html>
